@@ -4,6 +4,33 @@ class node():
 		self.left = None
 		self.right = None
 		self.parent = None
+
+	def rotateRight(self):
+		'''rotates a BST around this node'''
+		leftChild = self.left
+		leftChildsRightChild = leftChild.right
+		parent = self.parent
+
+		self.left = leftChildsRightChild
+		leftChildsRightChild.parent = self
+		
+		leftChild.right = self
+		self.parent = leftChild
+		leftChild.parent = parent
+	
+	def rotateLeft(self):
+		'''rotates a BST around this node'''
+		rightChild = self.right
+		rightChildsleftChild = rightChild.left
+		parent = self.parent
+
+		self.right = rightChildsleftChild
+		print(rightChild)
+		rightChildsleftChild.parent = self
+		
+		rightChild.left = self
+		self.parent = rightChild
+		rightChild.parent = parent
 	
 	def __repr__(self):
 		if self.parent == None: 
@@ -71,6 +98,7 @@ class binarySearchTree():
 				nodeOfInterest = nodeOfInterest.right
 
 	def min(self):
+		'''return the node with the minimum key'''
 		nodeOfInterest = self.root
 		while True:
 			if nodeOfInterest.left == None:
@@ -79,10 +107,20 @@ class binarySearchTree():
 				nodeOfInterest = nodeOfInterest.left
 
 	def max(self):
+		'''return the node with the maximum key'''
 		nodeOfInterest = self.root
 		while True:
 			if nodeOfInterest.right == None:
 				return nodeOfInterest
 			else:
 				nodeOfInterest = nodeOfInterest.right
-
+	
+	def resetRoot(self):
+		'''sets self.root after rotations or other root changing transforms'''
+		rootCandidate = self.root
+		while True:
+			if rootCandidate.parent == None:
+				self.root = rootCandidate
+				return self.root
+			else:
+				rootCandidate = rootCandidate.parent
