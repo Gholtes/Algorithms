@@ -4,9 +4,15 @@ class node():
 		self.left = None
 		self.right = None
 		self.parent = None
+		self.height = 0
 
 	def rotateRight(self):
 		'''rotates a BST around this node'''
+		#check if node is root
+		root = False
+		if self.parent == None:
+			root = True
+		#rotate
 		leftChild = self.left
 		leftChildsRightChild = leftChild.right
 		parent = self.parent
@@ -17,20 +23,28 @@ class node():
 		leftChild.right = self
 		self.parent = leftChild
 		leftChild.parent = parent
-	
+
+		return root
+
 	def rotateLeft(self):
 		'''rotates a BST around this node'''
+		#check if node is root
+		root = False
+		if self.parent == None:
+			root = True
+		#rotate
 		rightChild = self.right
 		rightChildsleftChild = rightChild.left
 		parent = self.parent
 
 		self.right = rightChildsleftChild
-		print(rightChild)
 		rightChildsleftChild.parent = self
 		
 		rightChild.left = self
 		self.parent = rightChild
 		rightChild.parent = parent
+
+		return root
 	
 	def __repr__(self):
 		if self.parent == None: 
@@ -48,15 +62,17 @@ class node():
 		else: 
 			rightRepr = self.right.key
 
-		return "Key: {0} Parent: {1}\nLeft: {2} | Right: {3}".format(self.key, parentRepr, leftRepr, rightRepr)
+		return "Key: {0} Parent: {1} Height: {4}\nLeft: {2} | Right: {3}".format(self.key, parentRepr, leftRepr, rightRepr, self.height)
 
 class binarySearchTree():
-	def __init__(self, rootKey):
+	def __init__(self, rootKey, balance = False):
 		self.root = node(rootKey)
+		self.AVLBal = balance
 	
 	def insert(self, keyToInsert):
 		'''Add a node to the tree and return the new node
-		if the key already exists, return the existing node'''
+		if the key already exists, return the existing node.
+		Uses AVL balancing'''
 		previousNode = None
 		nodeOfInterest = self.root
 		while True:
@@ -68,7 +84,13 @@ class binarySearchTree():
 					#Then we went left to get here
 					previousNode.left = newNode
 				else:
+					#Then we went right to get here
 					previousNode.right = newNode
+				#recalc heights
+				self.updateHeights(newNode.parent)
+				if self.AVLBal:
+					#Call AVL balance
+					self.balance(newNode.parent)
 				return newNode
 			elif nodeOfInterest.key == keyToInsert:
 				#key is already in the tree, break
@@ -124,3 +146,66 @@ class binarySearchTree():
 				return self.root
 			else:
 				rootCandidate = rootCandidate.parent
+	
+	def updateHeights(self, node):
+		'''adds addition to all heights up from node to root'''
+		if node.left != None:
+			leftChildHeight = node.left.height
+		else:
+			leftChildHeight = -1
+		
+		if node.right != None:
+			rightChildHeight = node.right.height
+		else:
+			rightChildHeight = -1
+		
+		node.height = max(leftChildHeight, rightChildHeight) + 1
+		#move up the tree unless we are at the root
+		if not node.parent == None:
+			self.updateHeights(node.parent)
+
+	def balance(self, node):
+		'''Balances a BST node, then iterates up the tree'''
+		if node.right == None:
+			Bal = False
+		else:
+			if node.right.right == None:
+				rightChildHeight = -1
+			else:
+				rightChildHeight = node.right.right.height
+
+			if node.right.left == None: 
+				leftChildHeight = -1
+			else:
+				leftChildHeight = node.right.left.height
+
+			#Balance
+			if rightChildHeight - leftChildHeight >= 0:
+				#check if rotations are possible:
+				if node.right != None:
+					if node.right.left != None:
+						# print("right heavy or balanced, rotating left on:\n{0}".format(node))
+						#right tree is too long, balance by rotating left'''
+						if node.rotateLeft():
+							self.root = node.parent
+						self.updateHeights(node)
+			else:
+				#check if rotations are possible:
+				if node.right != None:
+					if node.right.left != None:
+						if node.right.left.right != None:
+							# print("left heavy, rotating right, lefton:\n{0}".format(node))
+							#left tree is too long, balance by rotating right'''
+							rightChild = node.right
+							rightChild.rotateRight()
+							self.updateHeights(rightChild)
+
+							if node.rotateLeft():
+								self.root = node.parent
+							self.updateHeights(node)
+
+		#move up the tree unless we are at the root
+		if not node.parent == None:
+			self.balance(node.parent)
+
+
