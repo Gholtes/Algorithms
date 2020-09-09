@@ -7,8 +7,8 @@ class node:
     def __repr__(self):
         return str(self.val)
 
-class stack:
-    '''stack data structure (Last in First out)'''
+class stackLL:
+    '''stack data structure (Last in First out) based on linked lists'''
     def __init__(self):
         self.top = None
         self.size = 0
@@ -29,4 +29,17 @@ class stack:
             self.size -= 1
             return topVal.val
 
-    
+class stackL:
+	'''stack data structure (Last in First out) based on lists / arrays'''
+	def __init__(self):
+		self.items = []
+	def add(self, x):
+		self.items.append(x)
+	def get(self):
+		return self.items.pop()
+	def peek(self):
+		return self.items[-1]
+	def __len__(self):
+		return len(self.items)
+	def __repr__(self):
+		return str(self.items)
