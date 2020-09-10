@@ -9,7 +9,6 @@ class node:
 		return str(self.val)
 
 class singlyLinkedList(object):
-	'''stack data structure (Last in First out) based on linked lists'''
 	def __init__(self):
 		self.head = None
 		self.tail = None
@@ -77,7 +76,6 @@ class singlyLinkedList(object):
 		return currentTail
 
 class doublyLinkedList(object):
-	'''stack data structure (Last in First out) based on linked lists'''
 	def __init__(self):
 		#nodes
 		self.headSentinal = node(None)
