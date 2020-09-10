@@ -36,6 +36,8 @@ class stackL:
 	def add(self, x):
 		self.items.append(x)
 	def get(self):
+		if len(self.items) == 0:
+			return None
 		return self.items.pop()
 	def peek(self):
 		return self.items[-1]

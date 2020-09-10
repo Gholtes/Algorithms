@@ -112,6 +112,3 @@ class GrantDict:
 		m = self.m
 		K = K%(36**6) #cut off most significant bits
 		return math.floor((m/W) * ((K*A) % W))
-
-
-
