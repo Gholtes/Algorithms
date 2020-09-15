@@ -91,6 +91,75 @@ class heap():
 			self.disp(R)
 
 
-h = heap([1,4,2,3,6,8,1,2,2,2,2,2])
+class heap2():
+	'''Properties
+	Accessing elements
+	Root: i = 1
+	Left child of element i = 2i
+	Right child of element i = 2i+1
+	Parent of node i = i / 2 (need to round down)
+	'''
+	def __init__(self, A = None):
+		if A:
+			self.size = len(A)
+			self.A = A
+			self.A.insert(0,0)
+			self.build_heap()
+		else:
+			self.A = [0]
+			self.size = 0
+	
+	def insert(self, x):
+		self.A.append(x)
+		self.size += 1
+		self.min_heapify_up(self.size)
 
-h.disp()
+	def min_heapify_up(self, i):
+		while i > 1:
+			if self.A[i] < self.A[i//2]:
+				#swap parent, child
+				tmp = self.A[i//2]
+				self.A[i//2] = self.A[i]
+				self.A[i] = tmp
+			i = i // 2
+
+	def min_heapify_down(self, i):
+		while i * 2 <= self.size:
+			minChild = self.min_child(i)
+			if self.A[i] > self.A[minChild]:
+				tmp = self.A[i]
+				self.A[i] = self.A[minChild]
+				self.A[minChild] = tmp
+			i = minChild
+		
+	def min_child(self, i):
+		if i * 2 + 1 > self.size:
+			return i * 2
+		else:
+			if self.A[i * 2 + 1] > self.A[i * 2]:
+				return i * 2
+			else:
+				return i * 2 + 1
+	
+	def getRoot(self):
+		root = self.A[1]
+		self.A[1] = self.A[self.size] #set root as last item
+		self.size -= 1
+		self.A.pop() #remove last item
+		self.min_heapify_down(1)
+		return root
+	
+	def build_heap(self):
+		middle = self.size // 2
+		for i in range(middle, 0,-1):
+			print(i)
+			self.min_heapify_down(i)
+		print(self.A)
+	
+	def __repr__(self):
+		return str(self.A)
+
+
+h = heap2([25,4,2,3,6,8,1,0,2,9,12,2])
+
+print(h)
