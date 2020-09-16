@@ -56,6 +56,7 @@ class linkedList:
 		return str(LIST)
 
 class Grant_Dict_Chain:
+	'''Dictionary implimented with a hash table. Collisions resolved with chaining (linked list)'''
 	def __init__(self, initialContents = None, m = 1979):
 		#init access table as a list
 		self.m = m
@@ -114,6 +115,8 @@ class Grant_Dict_Chain:
 		return math.floor((m/W) * ((K*A) % W))
 
 class Grant_Dict_Open_Addressing:
+	'''Dictionary implimented with a hash table. Collisions resolved with open addressing
+	Also supports automatic resizing and rehashing, delete of key-value pairs'''
 	def __init__(self, initialContents = None, m = 11):
 		#init access table as a list
 		self.m = m
@@ -123,7 +126,6 @@ class Grant_Dict_Open_Addressing:
 		self.keys = [None for i in range(m)]
 		
 	
-
 	def resize(self):
 		if self.size / self.m > self.resize_threshold:
 			#reallocate dict
@@ -143,9 +145,7 @@ class Grant_Dict_Open_Addressing:
 				if key != None and key != "_del":
 					self.__setitem__(key, tmp.values[i])
 
-			
-			
-			
+
 	def delete(self, key, i=0):
 		hashedKey = self.GrantHash(key, i)
 
@@ -153,7 +153,7 @@ class Grant_Dict_Open_Addressing:
 			raise KeyError("key: {0} not in Dict".format(key))
 		elif self.keys[hashedKey] == key:
 			self.keys[hashedKey] = "_del"
-			self.values[hashedKey] = None
+			self.values[hashedKey] = "_del"
 			self.size -= 1
 		else:
 			#try next slot
